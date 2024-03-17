@@ -3,6 +3,7 @@ import axios from "axios";
 import bodyParser from "body-parser";
 
 const app = express();
+let data ={};
 const port = 3000;
 const API_URL = "https://kodessphere-api.vercel.app";
 
@@ -24,77 +25,53 @@ app.get("/", (req, res) => {
 
 app.post("/devices", async (req, res) => {
   const device = req.body.device;
-  const value = req.body.value;
-  console.log(req.body);
+  if(device === "fan")
+  {
+    let value= parseInt(req.body.value);
+    data = {
+    teamid: "HxMvgPp",
+    device: device,
+    value: value
+    }
+  }
+  else if(device === "bulb")
+  {
+    let value = parseInt(req.body.value);
+    data = {
+      teamid: "HxMvgPp",
+      device: device,
+      value: value
+      }
+  }
+  else if(device === "ac")
+  {
+    let temp = parseInt(req.body.value);
+    let state = parseInt(req.body.state);
+    data = {
+      teamid: "HxMvgPp",
+      device: device,
+      value: {
+        "temp": temp,
+        "state": 0
+      }
+      }
+  }
+  else
+  {
+    let color = req.body.value;
+    data = {
+      teamid: "HxMvgPp",
+      device: device,
+      value: color
+      }
+  }
 
-  /*try {
-    const result = await axios.get(API_URL + "/devices/" + searchId, config);
-    res.render("index.ejs", { content: JSON.stringify(result.data) });
+  console.log(data);
+
+  try {
+    const result = await axios.post(API_URL + "/devices", data);
+    console.log(result.data);
   } catch (error) {
-    res.render("index.ejs", { content: JSON.stringify(error.response.data) });
-  }*/
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-app.post("/post-secret", async (req, res) => {
-  // TODO 2: Use axios to POST the data from req.body to the secrets api servers.
-  const update ={
-    secret: req.body.secret,
-    score: req.body.score
-  };
-  try{
-    const result = await axios.post(API_URL+"/secrets", update , config);
-    res.render("index.ejs", {content : JSON.stringify(result.data) });
-
-  }catch(error){
-    res.render("index.ejs", {content: JSON.stringify(error.response.data)});
+    res.send("Error");
   }
 });
-
-app.post("/put-secret", async (req, res) => {
-  const searchId = req.body.id;
-  // TODO 3: Use axios to PUT the data from req.body to the secrets api servers.
-  const update ={
-    secret: req.body.secret,
-    score: req.body.score
-  };
-  try{
-    const result = await axios.put(API_URL+"/secrets/"+searchId , update , config);
-    res.render("index.ejs", {content : JSON.stringify(result.data)});
-  }catch(error){
-    res.render("index.ejs",{content : JSON.stringify(error.response.data)});
-  }
-
-  
-});
-
-app.post("/patch-secret", async (req, res) => {
-  const searchId = req.body.id;
-  // TODO 4: Use axios to PATCH the data from req.body to the secrets api servers.
-});
-
-app.post("/delete-secret", async (req, res) => {
-  const searchId = req.body.id;
-  // TODO 5: Use axios to DELETE the item with searchId from the secrets api servers.
-});*/
-
